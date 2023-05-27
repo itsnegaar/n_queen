@@ -50,6 +50,7 @@ def evolutionary_algorithm(population_size, n, generations, mutation_rate):
     for generation in range(generations):
         population = sorted(population, key=lambda x: fitness(x))
         if fitness(population[0]) == 0:
+            print("Found Solution! In iteration: {}.".format(generation))
             return population[0]
 
         new_population = population[:2]
@@ -59,9 +60,10 @@ def evolutionary_algorithm(population_size, n, generations, mutation_rate):
             child = crossover(parent1, parent2)
             child = mutate(child, mutation_rate)
             new_population.append(child)
-
+        
         population = new_population
-
+    if generation >= generations - 1:
+        print("Couldn't find solution!")
     return sorted(population, key=lambda x: fitness(x))[0]
 
 #check if the solution is correct or not
@@ -103,11 +105,14 @@ def plot_solution(solution):
 
 n_values = [8, 16]
 population_size = 100
-generations = 1000
+generations = 1500
 mutation_rate = 0.1
 
 for n in n_values:
     solution = evolutionary_algorithm(population_size, n, generations, mutation_rate)
-    print(f"Solution for n={n}: {solution}")
-    print(f"Is the solution valid? {is_solution_valid(solution)}")
+    if is_solution_valid(solution):
+        print(f"Solution for n={n}: {solution}")
+        print(f"Is the solution valid? {is_solution_valid(solution)}")
+    else:
+         print("Couldn't find solution in {} iteration!".format(generations))
     plot_solution(solution)
